@@ -60,40 +60,33 @@ void merge_sort(std::vector<int>& mas)
     }
 }
 
-void qsort(std::vector<int>& mas, int size)
+int partition (std::vector<int>& mas, int start, int end)
 {
-    int i = 0;
-    int j = size - 1;
+    int pivot = mas[end];
+    int pIndex = start;
 
-    int mid = mas[size / 2];
-
-    while (i <= j)
+    for (int i = start; i < end; i++)
     {
-        while (mas[i] < mid)
-            i++;
-        while (mas[j] > mid)
-            j--;
-
-        if (i <= j)
+        if (mas[i] <= pivot)
         {
-            std::swap(mas[i], mas[j]);
-            i++;
-            j--;
+            std::swap(mas[pIndex], mas[i]);
+            pIndex++;
         }
     }
+    std::swap(mas[pIndex], mas[end]);
 
-    if (j > 0)
-    {
-        qsort(mas, j + 1);
-    }
-    if (i < size)
-    {
-        // Неправильно?
-        std::vector<int> sub(&mas[i], &mas[mas.size()]);
+    return pIndex;
+}
 
-        qsort(sub, size - i);
-    }
+void qsort(std::vector<int>& mas, int start, int end)
+{
+    if (start >= end)
+        return;
 
+    int pivot = partition(mas, start, end);
+
+    qsort(mas, start, pivot - 1);
+    qsort(mas, pivot + 1, end);
 }
 
 void print(std::vector<int>& mas)
@@ -111,7 +104,7 @@ int main() {
     print(m1);
 
     std::vector<int> m2 = m;
-    qsort(m2, m2.size());
+    qsort(m2, 0, m2.size() - 1);
     print(m2);
     return 0;
 }
